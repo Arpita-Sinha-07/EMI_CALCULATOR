@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EMI Calculator | Smart Loan Planner</title>
+  <meta name="description" content="Calculate your monthly EMI, total interest, and total payment instantly with our smart, modern EMI Calculator." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- ── HEADER ── -->
+    <div class="header">
+      <div class="header-badge">
+        <span>💰</span> Smart Loan Planner
+      </div>
+      <h1>EMI Calculator</h1>
+      <p>Instantly calculate your loan repayment details</p>
+    </div>
+    <!-- ── MAIN CARD ── -->
+    <div class="card">
+      <!-- LEFT: INPUTS -->
+      <div class="inputs-section">
+        <div class="section-title">Loan Details</div>
+        <!-- Loan Amount -->
+        <div class="input-group">
+          <div class="input-label">
+            <span>Loan Amount</span>
+            <span class="input-value-badge" id="loanAmountBadge">₹5,00,000</span>
+          </div>
+          <div class="input-wrapper">
+            <span class="input-prefix">₹</span>
+            <input
+              type="number"
+              id="loanAmount"
+              min="10000"
+              max="100000000"
+              value="500000"
+              aria-label="Loan Amount in Rupees"
+            />
+          </div>
+          <div class="slider-wrapper">
+            <input
+              type="range"
+              id="loanAmountSlider"
+              min="10000"
+              max="10000000"
+              step="10000"
+              value="500000"
+              aria-label="Loan Amount Slider"
+            />
+            <div class="slider-limits"><span>₹10K</span><span>₹1Cr</span></div>
+          </div>
+        </div>
+        <!-- Interest Rate -->
+        <div class="input-group">
+          <div class="input-label">
+            <span>Annual Interest Rate</span>
+            <span class="input-value-badge" id="interestRateBadge">8.5%</span>
+          </div>
+          <div class="input-wrapper">
+            <span class="input-prefix">%</span>
+            <input
+              type="number"
+              id="interestRate"
+              min="0.1"
+              max="36"
+              step="0.1"
+              value="8.5"
+              aria-label="Annual Interest Rate"
+            />
+          </div>
+          <div class="slider-wrapper">
+            <input
+              type="range"
+              id="interestRateSlider"
+              min="0.1"
+              max="36"
+              step="0.1"
+              value="8.5"
+              aria-label="Interest Rate Slider"
+            />
+            <div class="slider-limits"><span>0.1%</span><span>36%</span></div>
+          </div>
+        </div>
+        <!-- Tenure -->
+        <div class="input-group">
+          <div class="input-label">
+            <span>Loan Tenure</span>
+            <span class="input-value-badge" id="tenureBadge">5 Yrs</span>
+          </div>
+          <div class="input-wrapper">
+            <span class="input-prefix">Yrs</span>
+            <input
+              type="number"
+              id="tenure"
+              min="1"
+              max="30"
+              step="1"
+              value="5"
+              aria-label="Loan Tenure in Years"
+            />
+          </div>
+          <div class="slider-wrapper">
+            <input
+              type="range"
+              id="tenureSlider"
+              min="1"
+              max="30"
+              step="1"
+              value="5"
+              aria-label="Tenure Slider"
+            />
+            <div class="slider-limits"><span>1 Yr</span><span>30 Yrs</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- RIGHT: RESULTS -->
+      <div class="results-section">
+        <div>
+          <div class="section-title">Your Results</div>
+          <div class="result-card emi">
+            <div class="result-label">Monthly EMI</div>
+            <div class="result-value" id="emiValue">₹0</div>
+            <div class="result-sub">Due every month</div>
+          </div>
+          <div class="result-card interest">
+            <div class="result-label">Total Interest Payable</div>
+            <div class="result-value" id="totalInterestValue">₹0</div>
+            <div class="result-sub" id="interestPercent">0% of principal</div>
+          </div>
+          <div class="result-card total">
+            <div class="result-label">Total Payment</div>
+            <div class="result-value" id="totalPaymentValue">₹0</div>
+            <div class="result-sub">Principal + Interest</div>
+          </div>
+        </div>
+        <!-- DONUT CHART -->
+        <div class="chart-wrapper">
+          <div class="donut-container">
+            <svg width="160" height="160" viewBox="0 0 160 160" id="donutSvg">
+              <!-- Background track -->
+              <circle cx="80" cy="80" r="62" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="20" />
+              <!-- Interest arc -->
+              <circle id="interestArc" cx="80" cy="80" r="62"
+                fill="none"
+                stroke="#fb923c"
+                stroke-width="20"
+                stroke-dasharray="0 389.56"
+                stroke-linecap="round"
+                style="transition: stroke-dasharray 0.6s cubic-bezier(0.4,0,0.2,1);"
+              />
+              <!-- Principal arc -->
+              <circle id="principalArc" cx="80" cy="80" r="62"
+                fill="none"
+                stroke="url(#principalGrad)"
+                stroke-width="20"
+                stroke-dasharray="0 389.56"
+                stroke-linecap="round"
+                style="transition: stroke-dasharray 0.6s cubic-bezier(0.4,0,0.2,1);"
+              />
+              <defs>
+                <linearGradient id="principalGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#6366f1"/>
+                  <stop offset="100%" stop-color="#a78bfa"/>
+                </linearGradient>
+              </defs>
+            </svg>
+            <div class="donut-center">
+              <div class="donut-center-label">Interest</div>
+              <div class="donut-center-value" id="donutCenterValue">0%</div>
+            </div>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item">
+              <div class="legend-dot" style="background: linear-gradient(135deg,#6366f1,#a78bfa)"></div>
+              Principal
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#fb923c"></div>
+              Interest
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /.card -->
+    <div class="footer">
+      EMI = [P × R × (1+R)<sup>N</sup>] / [(1+R)<sup>N</sup> − 1] &nbsp;|&nbsp; Results are indicative only.
+    </div>
+  </div><!-- /.container -->
+  <script src="script.js"></script>
+</body>
+</html>
