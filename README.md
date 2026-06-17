@@ -85,7 +85,7 @@ git clone https://github.com/your-username/emi-calculator.git
 ### Navigate to Project Folder
 
 ```bash
-cd emi-calculator
+cd Main
 ```
 
 ### Run Locally
